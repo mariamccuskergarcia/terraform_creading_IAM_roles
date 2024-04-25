@@ -1,0 +1,8 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_PR_$(Date:yyyyMMdd)$(Rev:.r)
+jobs:
+  - template: templates/jobs/shift_left.yaml
+    parameters:
+      PythonVersion: 3.10
+      workingDirectory: "tests/ci"
+      name: "shift_left"
+...

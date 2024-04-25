@@ -1,0 +1,25 @@
+trigger:
+  branches:
+    include:
+      - refs/heads/main
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+stages:
+  - stage: build
+    displayName: "build"
+    pool:
+      vmImage: windows-latest
+    jobs:
+      - template: templates/jobs/shift_left.yaml
+        parameters:
+          PythonVersion: 3.10
+          workingDirectory: "tests/ci"
+          name: "shift_left"
+      - job: tag
+        displayName: tag repo
+        dependsOn: shift_left
+        steps:
+          - checkout: self
+            submodules: true
+            persistCredentials: true
+          - template: templates/steps/azdo_git_tag.yaml
+...
